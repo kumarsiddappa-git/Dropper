@@ -20,4 +20,16 @@ so we shall first discuss on what methods are used to allocate a space in the pr
 
 1. VirutallAlloc is an API which is defined in Kernel32.dll
 
-    We can find more detailed information in the [link](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)
+LPVOID VirtualAlloc(  
+  LPVOID lpAddress,                // Starting address from which the allacotion should happen , exmple a memory  
+  SIZE_T dwSize,                  // Size of the memory to be allocated   
+  DWORD  flAllocationType,        // What kind of allocation for the memory to be allocated like MEM_COMMIT, MEM_RESERVE 
+  DWORD  flProtect                // Memory Protection to be allocated PAGE_EXECUTE , PAGE_READWRITE etc   
+);  
+
+Here we find a simple structure which has four structure members, 
+
+
+
+
+We can find more detailed information in the [link](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)
