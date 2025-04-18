@@ -60,13 +60,16 @@ Sample line of code => rv = VirtualProtect(exec_mem, payload_len, PAGE_EXECUTE_R
 
 We can find more detailed information in the link [VirtualProtect](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualprotect)
 
-Next API would be CreateThread, which creates thread int he process 
+Next API would be CreateThread, which creates thread in the process 
 
 HANDLE CreateThread(
-  [in, optional]  LPSECURITY_ATTRIBUTES   lpThreadAttributes,
-  [in]            SIZE_T                  dwStackSize,
-  [in]            LPTHREAD_START_ROUTINE  lpStartAddress,
-  [in, optional]  __drv_aliasesMem LPVOID lpParameter,
-  [in]            DWORD                   dwCreationFlags,
-  [out, optional] LPDWORD                 lpThreadId
-);
+  [in, optional]  LPSECURITY_ATTRIBUTES   lpThreadAttributes,     // A pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned handle can be inherited by child processes.  
+  [in]            SIZE_T                  dwStackSize,    // The initial size of the stack, in bytes  
+  [in]            LPTHREAD_START_ROUTINE  lpStartAddress, //   This pointer represents the starting address of the thread  
+  [in, optional]  __drv_aliasesMem LPVOID lpParameter,    //  A pointer to a variable to be passed to the thread.  
+  [in]            DWORD                   dwCreationFlags,  // The flags that control the creation of the thread  
+  [out, optional] LPDWORD                 lpThreadId   //  A pointer to a variable that receives the thread identifier  
+);   
+
+Sample line of code => th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_mem, 0, 0, 0); LPTHREAD_START_ROUTINE  Points to a function that notifies the host that a thread has started to execute and exec_mem start of payload to start
+
