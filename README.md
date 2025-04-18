@@ -62,7 +62,7 @@ We can find more detailed information in the link [VirtualProtect](https://learn
 
 Next API would be CreateThread, which creates thread in the process 
 
-HANDLE CreateThread(
+HANDLE CreateThread(  
   [in, optional]  LPSECURITY_ATTRIBUTES   lpThreadAttributes,     // A pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned handle can be inherited by child processes.  
   [in]            SIZE_T                  dwStackSize,    // The initial size of the stack, in bytes  
   [in]            LPTHREAD_START_ROUTINE  lpStartAddress, //   This pointer represents the starting address of the thread  
@@ -72,4 +72,10 @@ HANDLE CreateThread(
 );   
 
 Sample line of code => th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_mem, 0, 0, 0); LPTHREAD_START_ROUTINE  Points to a function that notifies the host that a thread has started to execute and exec_mem start of payload to start
+
+We can find more detailed information in the link [CreateThread](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
+
+Now lets start to understand how it can be visualized 
+
+the code is attached which you can compile using gcc and create a obj and exe file 
 
