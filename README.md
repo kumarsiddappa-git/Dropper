@@ -18,7 +18,7 @@ It's just a sample diagram which shows the different sections we can see in the 
 
 so we shall first discuss on what methods are used to allocate a space in the process memory , move our payload into it and then how to provide the permissions after that we can also see the x64dbg being used to see the payload placement.
 
-1. VirutallAlloc is an API which is defined in Kernel32.dll
+1. VirutallAlloc is an API which is defined in Kernel32.dll, which allocates a memory in the process we mention
 
 LPVOID VirtualAlloc(  
   LPVOID lpAddress,                // Starting address from which the allacotion should happen , exmple a memory  
@@ -27,9 +27,6 @@ LPVOID VirtualAlloc(
   DWORD  flProtect                // Memory Protection to be allocated PAGE_EXECUTE , PAGE_READWRITE etc   
 );  
 
-Here we find a simple structure which has four structure members, 
 
-
-
-
+Sample - exec_mem = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);  here we are allocting the memory from 0 address until payload_len, we are having a allocation type as MEM_COMMIT and MEM_RESERVE and giving the permission as PAGE_READWRITE just to avoid the EDR triggering as suspicious if the allocated memory is given directly as PAGE_EXECUTE
 We can find more detailed information in the [link](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)
