@@ -112,7 +112,7 @@ unsigned char payload[] = {
 	};  
 
  
-
+Now our main objective is to find where the payload is stored, as per our code 
 
 
 
