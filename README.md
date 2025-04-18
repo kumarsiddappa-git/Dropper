@@ -20,6 +20,8 @@ so we shall first discuss on what methods are used to allocate a space in the pr
 
 1. VirutallAlloc is an API which is defined in Kernel32.dll, which allocates a memory in the process we mention
 
+void * exec_mem;
+
 LPVOID VirtualAlloc(  
   LPVOID lpAddress,                // Starting address from which the allacotion should happen , exmple a memory  
   SIZE_T dwSize,                  // Size of the memory to be allocated   
@@ -28,5 +30,43 @@ LPVOID VirtualAlloc(
 );  
 
 
-Sample - exec_mem = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);  here we are allocting the memory from 0 address until payload_len, we are having a allocation type as MEM_COMMIT and MEM_RESERVE and giving the permission as PAGE_READWRITE just to avoid the EDR triggering as suspicious if the allocated memory is given directly as PAGE_EXECUTE
-We can find more detailed information in the [link](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)
+Sample line of code => exec_mem = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);  here we are allocting the memory from 0 address until payload_len, we are having a allocation type as MEM_COMMIT and MEM_RESERVE and giving the permission as PAGE_READWRITE just to avoid the EDR triggering as suspicious if the allocated memory is given directly as PAGE_EXECUTE  
+
+We can find more detailed information in the link [VirtualAlloc](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)
+
+Next API Used is RtlMoveMemory, which is used to copy the payload from Source to Destination
+
+VOID RtlMoveMemory(  
+  VOID UNALIGNED *Destination,   // Where to move the memory     
+  const VOID UNALIGNED *Source,   // From where to move the payload  
+  SIZE_T         Length           //size of the payload  
+);  
+
+
+Sample line of code => RtlMoveMemory(exec_mem, payload, payload_len); , here the payload is moved to address pointed or allocated from the VirtualAlloc API  
+
+We can find more detailed information in the link [RtlMoveMemory](https://learn.microsoft.com/en-us/windows/win32/devnotes/rtlmovememory)
+
+Next API is VirtualProtect, which Changes the protection on a region of committed pages in the virtual address space of the calling process.
+
+BOOL VirtualProtect(
+  [in]  LPVOID lpAddress,    // Source address or address to which we need to change the protection or permission   
+  [in]  SIZE_T dwSize,       // Size of the memory to change the protect   
+  [in]  DWORD  flNewProtect, // New Protection we apply from the old protection   
+  [out] PDWORD lpflOldProtect // A pointer to a variable that receives the previous access protection value, that is initial page  
+);  
+
+Sample line of code => rv = VirtualProtect(exec_mem, payload_len, PAGE_EXECUTE_READ, &oldprotect);  the exec_mem which has the payload or pointing to the payload had a protection PAGE_READWRITE initially and now its being changed to PAGE_EXECUTE_READ
+
+We can find more detailed information in the link [VirtualProtect](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualprotect)
+
+Next API would be CreateThread, which creates thread int he process 
+
+HANDLE CreateThread(
+  [in, optional]  LPSECURITY_ATTRIBUTES   lpThreadAttributes,
+  [in]            SIZE_T                  dwStackSize,
+  [in]            LPTHREAD_START_ROUTINE  lpStartAddress,
+  [in, optional]  __drv_aliasesMem LPVOID lpParameter,
+  [in]            DWORD                   dwCreationFlags,
+  [out, optional] LPDWORD                 lpThreadId
+);
