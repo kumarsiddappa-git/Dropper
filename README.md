@@ -93,6 +93,24 @@ Once clicked select the code or exe which we executed
 ![image](https://github.com/user-attachments/assets/18d1601d-92b0-43b5-9656-9ac74500839a)
 
 
+Now we can see the x64dbg is in Paused state so we need to run the debugger by clicking on . once run it moves to Running 
+
+![image](https://github.com/user-attachments/assets/b4d20ec6-883f-4879-afa6-b66156fe7078)
+
+
+Now lets go to the code and press Enter so once we press Enter we go to INT3 code in our code or payload as per the screnshot 
+
+![image](https://github.com/user-attachments/assets/f13ccd89-d671-48ec-837f-3572d9319833)  
+
+In the above image we can see the payload we had in our code is being show , for example i am pasting the payload we have in the code 
+
+unsigned char payload[] = {
+		0x40,		// INC EAX
+		0x90,		// NOP
+		0xcc,		// INT3
+		0xc3		// RET
+	};
+
 
 
 
