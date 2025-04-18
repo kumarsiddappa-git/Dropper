@@ -75,7 +75,28 @@ Sample line of code => th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_mem
 
 We can find more detailed information in the link [CreateThread](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 
+
 Now lets start to understand how it can be visualized 
 
-the code is attached which you can compile using gcc and create a obj and exe file 
+The code is attached which you can compile using gcc and create a obj and exe file 
+
+Execute the code and open the x64dbg and attach the exe file 
+
+![image](https://github.com/user-attachments/assets/cf89bd7e-67a1-4157-acd0-3bd2aa0f95b8)
+
+Click on the Attach 
+
+![image](https://github.com/user-attachments/assets/5ff7f1db-0865-4a9c-8366-f88c855cf9ee)
+
+Once clicked select the code or exe which we executed 
+
+![image](https://github.com/user-attachments/assets/18d1601d-92b0-43b5-9656-9ac74500839a)
+
+
+
+
+
+
+
+
 
