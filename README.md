@@ -104,12 +104,14 @@ Now lets go to the code and press Enter so once we press Enter we go to INT3 cod
 
 In the above image we can see the payload we had in our code is being show , for example i am pasting the payload we have in the code 
 
-unsigned char payload[] = {
-		0x40,		// INC EAX
-		0x90,		// NOP
-		0xcc,		// INT3
-		0xc3		// RET
-	};
+unsigned char payload[] = {  
+		0x40,		// INC EAX  
+		0x90,		// NOP  
+		0xcc,		// INT3  
+		0xc3		// RET  
+	};  
+
+ 
 
 
 
