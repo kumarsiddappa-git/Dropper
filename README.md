@@ -20,12 +20,13 @@ It's just a simple diagram which shows the different sections we would be seeing
 so we shall first discuss on steps 
 1. what API methods are used to allocate a space in the process memory  
 2. move our payload into the virtually allocated memory  
-3. Then how to provide the permissions after that we can also see the x64dbg being used to see the payload placement.  
+3. Then how to provide the permissions after that we can also see the x64dbg being used to see the payload placement.
+4. Create a Threat inside the current Process. 
 
 
 VirutallAlloc is an API which is defined in Kernel32.dll, which allocates a memory in the process we mention
 
-		void * exec_mem;
+		void * exec_memory;
 		
 		LPVOID VirtualAlloc( 		
 		  LPVOID lpAddress,                // Starting address from which the allacotion should happen , exmple a memory  
@@ -35,7 +36,11 @@ VirutallAlloc is an API which is defined in Kernel32.dll, which allocates a memo
 		  );  
 
 
-Sample line of code => exec_mem = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);  here we are allocting the memory from 0 address until payload_len, we are having a allocation type as MEM_COMMIT and MEM_RESERVE and giving the permission as PAGE_READWRITE just to avoid the EDR triggering as suspicious if the allocated memory is given directly as PAGE_EXECUTE  
+Sample line of code =>  
+
+	exec_memory = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);  
+ 
+ Here we are allocting the memory from 0 address until payload_len, we are having a allocation type as MEM_COMMIT and MEM_RESERVE and giving the permission as PAGE_READWRITE just to avoid the EDR triggering as suspicious if the allocated memory is given directly as PAGE_EXECUTE  
 
 We can find more detailed information in the link [VirtualAlloc](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)
 
@@ -48,7 +53,11 @@ Next API Used is RtlMoveMemory, which is used to copy the payload from Source to
 		  );  
 
 
-Sample line of code => RtlMoveMemory(exec_mem, payload, payload_len); , here the payload is moved to address pointed or allocated from the VirtualAlloc API  
+Sample line of code =>  
+
+	RtlMoveMemory(exec_memory, payload, payload_len); 
+ 
+Here the payload is moved to address pointed or allocated from the VirtualAlloc API  
 
 We can find more detailed information in the link [RtlMoveMemory](https://learn.microsoft.com/en-us/windows/win32/devnotes/rtlmovememory)
 
@@ -61,7 +70,11 @@ Next API is VirtualProtect, which Changes the protection on a region of committe
 		  [out] PDWORD lpflOldProtect // A pointer to a variable that receives the previous access protection value, that is initial page 
 		  );  
 
-Sample line of code => rv = VirtualProtect(exec_mem, payload_len, PAGE_EXECUTE_READ, &oldprotect);  the exec_mem which has the payload or pointing to the payload had a protection PAGE_READWRITE initially and now its being changed to PAGE_EXECUTE_READ
+Sample line of code => 
+
+	rv = VirtualProtect(exec_memory, payload_len, PAGE_EXECUTE_READ, &oldprotect);  
+ 
+ the exec_mem which has the payload or pointing to the payload had a protection PAGE_READWRITE initially and now its being changed to PAGE_EXECUTE_READ
 
 We can find more detailed information in the link [VirtualProtect](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualprotect)
 
@@ -76,7 +89,11 @@ Next API would be CreateThread, which creates thread in the process
 	  [out, optional] LPDWORD                 lpThreadId   //  A pointer to a variable that receives the thread identifier  
 	);   
 
-Sample line of code => th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_mem, 0, 0, 0); LPTHREAD_START_ROUTINE  Points to a function that notifies the host that a thread has started to execute and exec_mem start of payload to start
+Sample line of code => 
+
+	th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_memory, 0, 0, 0); 
+ 
+ LPTHREAD_START_ROUTINE  Points to a function that notifies the host that a thread has started to execute and exec_mem start of payload to start
 
 We can find more detailed information in the link [CreateThread](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 
@@ -111,12 +128,12 @@ Copy the memory address and save it on Notepad or one notes for later use .
 
 In the above image we can see the payload we had in our code is being shown , The sample payload being used in the code is being pasted here 
 
-unsigned char payload[] = {  
-		0x40,		// INC EAX  
-		0x90,		// NOP  
-		0xcc,		// INT3  
-		0xc3		// RET  
-	};  
+	unsigned char payload[] = {  
+			0x40,		// INC EAX  
+			0x90,		// NOP  
+			0xcc,		// INT3  
+			0xc3		// RET  
+		};  
 
  
 Now our main objective is to find where the payload is stored and which sections we can see them.
@@ -141,12 +158,12 @@ Steps
 
 5. Now lets iterate over each address and find where those payload stays
 
-   Address           Data
-
-																				 
-0000000FF26FF850  40 90 CC C3  
-00000123C4620000  40 90 CC C3  
-00007FF743B0101E  40 90 CC C3  
+	   Address           Data
+	
+																					 
+	0000000FF26FF850  40 90 CC C3  
+	00000123C4620000  40 90 CC C3  
+	00007FF743B0101E  40 90 CC C3  
 
        1. If we compare the first memory address memory address 0000000FF26FF850 in the Memory Map view, to identify where the payload is placed we can see that is saved on   		stack, now we might get a question why on stack? All the local variables of the functions are saved on stack and here main() is a function and payload is declared as 
         local variable in the code (main function).
@@ -163,15 +180,17 @@ Steps
 
 
 
-Finally we understood the payload is saved in the .text section since the payload is placed in the main function as local variable. 
-Payload is saved in 
-1. Priv memory with proper permissions
-2. Stack as local variable
-3. .text Section 
+	Finally we understood the payload is saved in the .text section since the payload is placed in the main function as local variable. 
+	Payload is saved in 
+	1. Priv memory with proper permissions  
+	2. Stack as local variable  
+	3. .text Section     
 
 
 
-
+	
+ 
+ Next Would be working on Data Section 
 
 
 
