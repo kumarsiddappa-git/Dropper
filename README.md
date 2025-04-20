@@ -25,14 +25,14 @@ so we shall first discuss on steps
 
 VirutallAlloc is an API which is defined in Kernel32.dll, which allocates a memory in the process we mention
 
-void * exec_mem;
-
-LPVOID VirtualAlloc(  
-  LPVOID lpAddress,                // Starting address from which the allacotion should happen , exmple a memory  
-  SIZE_T dwSize,                  // Size of the memory to be allocated   
-  DWORD  flAllocationType,        // What kind of allocation for the memory to be allocated like MEM_COMMIT, MEM_RESERVE 
-  DWORD  flProtect                // Memory Protection to be allocated PAGE_EXECUTE , PAGE_READWRITE etc   
-);  
+		void * exec_mem;
+		
+		LPVOID VirtualAlloc( 		
+		  LPVOID lpAddress,                // Starting address from which the allacotion should happen , exmple a memory  
+		  SIZE_T dwSize,                  // Size of the memory to be allocated   
+		  DWORD  flAllocationType,        // What kind of allocation for the memory to be allocated like MEM_COMMIT, MEM_RESERVE 
+		  DWORD  flProtect                // Memory Protection to be allocated PAGE_EXECUTE , PAGE_READWRITE etc 
+		  );  
 
 
 Sample line of code => exec_mem = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);  here we are allocting the memory from 0 address until payload_len, we are having a allocation type as MEM_COMMIT and MEM_RESERVE and giving the permission as PAGE_READWRITE just to avoid the EDR triggering as suspicious if the allocated memory is given directly as PAGE_EXECUTE  
@@ -41,11 +41,11 @@ We can find more detailed information in the link [VirtualAlloc](https://learn.m
 
 Next API Used is RtlMoveMemory, which is used to copy the payload from Source to Destination
 
-VOID RtlMoveMemory(  
-  VOID UNALIGNED *Destination,   // Where to move the memory     
-  const VOID UNALIGNED *Source,   // From where to move the payload  
-  SIZE_T         Length           //size of the payload  
-);  
+		VOID RtlMoveMemory( 		
+		  VOID UNALIGNED *Destination,   // Where to move the memory  
+		  const VOID UNALIGNED *Source,   // From where to move the payload 
+		  SIZE_T         Length           //size of the payload  
+		  );  
 
 
 Sample line of code => RtlMoveMemory(exec_mem, payload, payload_len); , here the payload is moved to address pointed or allocated from the VirtualAlloc API  
@@ -54,12 +54,12 @@ We can find more detailed information in the link [RtlMoveMemory](https://learn.
 
 Next API is VirtualProtect, which Changes the protection on a region of committed pages in the virtual address space of the calling process.
 
-BOOL VirtualProtect(
-  [in]  LPVOID lpAddress,    // Source address or address to which we need to change the protection or permission   
-  [in]  SIZE_T dwSize,       // Size of the memory to change the protect   
-  [in]  DWORD  flNewProtect, // New Protection we apply from the old protection   
-  [out] PDWORD lpflOldProtect // A pointer to a variable that receives the previous access protection value, that is initial page  
-);  
+		BOOL VirtualProtect(		
+		  [in]  LPVOID lpAddress,    // Source address or address to which we need to change the protection or permission  
+		  [in]  SIZE_T dwSize,       // Size of the memory to change the protect
+		  [in]  DWORD  flNewProtect, // New Protection we apply from the old protection
+		  [out] PDWORD lpflOldProtect // A pointer to a variable that receives the previous access protection value, that is initial page 
+		  );  
 
 Sample line of code => rv = VirtualProtect(exec_mem, payload_len, PAGE_EXECUTE_READ, &oldprotect);  the exec_mem which has the payload or pointing to the payload had a protection PAGE_READWRITE initially and now its being changed to PAGE_EXECUTE_READ
 
@@ -67,14 +67,14 @@ We can find more detailed information in the link [VirtualProtect](https://learn
 
 Next API would be CreateThread, which creates thread in the process 
 
-HANDLE CreateThread(  
-  [in, optional]  LPSECURITY_ATTRIBUTES   lpThreadAttributes,     // A pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned handle can be inherited by child processes.  
-  [in]            SIZE_T                  dwStackSize,    // The initial size of the stack, in bytes  
-  [in]            LPTHREAD_START_ROUTINE  lpStartAddress, //   This pointer represents the starting address of the thread  
-  [in, optional]  __drv_aliasesMem LPVOID lpParameter,    //  A pointer to a variable to be passed to the thread.  
-  [in]            DWORD                   dwCreationFlags,  // The flags that control the creation of the thread  
-  [out, optional] LPDWORD                 lpThreadId   //  A pointer to a variable that receives the thread identifier  
-);   
+	HANDLE CreateThread(  
+	  [in, optional]  LPSECURITY_ATTRIBUTES   lpThreadAttributes,     // A pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned handle can be inherited by child processes.  
+	  [in]            SIZE_T                  dwStackSize,    // The initial size of the stack, in bytes  
+	  [in]            LPTHREAD_START_ROUTINE  lpStartAddress, //   This pointer represents the starting address of the thread  
+	  [in, optional]  __drv_aliasesMem LPVOID lpParameter,    //  A pointer to a variable to be passed to the thread.  
+	  [in]            DWORD                   dwCreationFlags,  // The flags that control the creation of the thread  
+	  [out, optional] LPDWORD                 lpThreadId   //  A pointer to a variable that receives the thread identifier  
+	);   
 
 Sample line of code => th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_mem, 0, 0, 0); LPTHREAD_START_ROUTINE  Points to a function that notifies the host that a thread has started to execute and exec_mem start of payload to start
 
