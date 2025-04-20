@@ -148,19 +148,26 @@ Steps
 00000123C4620000  40 90 CC C3  
 00007FF743B0101E  40 90 CC C3  
 
-     1. If we compare the first memory address memory address 0000000FF26FF850 in the Memory Map view, to identify where the payload is placed we can see that is saved on   		stack, now we might get a question why on stack? All the local variables of the functions are saved on stack and here main() is a function and payload is declared as 
+       1. If we compare the first memory address memory address 0000000FF26FF850 in the Memory Map view, to identify where the payload is placed we can see that is saved on   		stack, now we might get a question why on stack? All the local variables of the functions are saved on stack and here main() is a function and payload is declared as 
         local variable in the code (main function).
 
-        ![image](https://github.com/user-attachments/assets/f1b14dfd-aa47-4086-b3bd-39127f1b7887)
+![image](https://github.com/user-attachments/assets/f1b14dfd-aa47-4086-b3bd-39127f1b7887)
 
      2. If we taks the second Memory address 00000123C4620000 in the Memory Map view, to identify what the address is about, from the image we can understand the memory  	         allocated is private and the initial permission was Read Write and the new permission provided is ER-- after VirtualProtect is executed with new permission 
 
-        ![image](https://github.com/user-attachments/assets/fb54f275-57ed-4dec-aea6-d06792f9b8e0)
+![image](https://github.com/user-attachments/assets/fb54f275-57ed-4dec-aea6-d06792f9b8e0)
 
      3. Now the final Memory address 00007FF743B0101E in Memory Map view, to identify where it is 
 
-        ![image](https://github.com/user-attachments/assets/17c104ca-eebf-4c1d-9a07-f73644decda6)  
+![image](https://github.com/user-attachments/assets/17c104ca-eebf-4c1d-9a07-f73644decda6)  
 
+
+
+Finally we understood the payload is saved in the .text section since the payload is placed in the main function as local variable. 
+Payload is saved in 
+1. Priv memory with proper permissions
+2. Stack as local variable
+3. .text Section 
 
 
 
