@@ -20,7 +20,7 @@ int main(void) {
 	};
 	unsigned int payload_len = 4;
 	
-	// Allocate a memory buffer for payload mentioned 
+	// Allocate a memory buffer for payload mentioned above
 	exec_mem = VirtualAlloc(0, payload_len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	printf("%-20s : 0x%-016p\n", "payload addr", (void *)payload);
 	printf("%-20s : 0x%-016p\n", "exec_mem addr", (void *)exec_mem);
@@ -32,9 +32,9 @@ int main(void) {
 	rv = VirtualProtect(exec_mem, payload_len, PAGE_EXECUTE_READ, &oldprotect);
 
 	printf("\nHit me!\n");
-	getchar();
+	getchar(); // wait as interrupt to check how the code is saved 
 
-	// If all good, run the payload
+	// If all good, run the payload by creating a thread in the current process
 	if ( rv != 0 ) {
 			th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_mem, 0, 0, 0);
 			WaitForSingleObject(th, -1);
