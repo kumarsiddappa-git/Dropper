@@ -135,7 +135,35 @@ Steps
 
     ![image](https://github.com/user-attachments/assets/e3e2c048-72d8-4ad4-9792-05635935dea0)
 
-4. 
+4. Save the Address we get so we can use them to search accross dissembler
+
+   ![image](https://github.com/user-attachments/assets/028e7178-6936-4c6b-8745-bd1786756e9d)
+
+5. Now lets iterate over each address and find where those payload stays
+
+   Address           Data
+
+																				 
+0000000FF26FF850  40 90 CC C3  
+00000123C4620000  40 90 CC C3  
+00007FF743B0101E  40 90 CC C3  
+
+     1. If we compare the first memory address memory address 0000000FF26FF850 in the Memory Map view, to identify where the payload is placed we can see that is saved on   		stack, now we might get a question why on stack? All the local variables of the functions are saved on stack and here main() is a function and payload is declared as 
+        local variable in the code (main function).
+
+        ![image](https://github.com/user-attachments/assets/f1b14dfd-aa47-4086-b3bd-39127f1b7887)
+
+     2. If we taks the second Memory address 00000123C4620000 in the Memory Map view, to identify what the address is about, from the image we can understand the memory  	         allocated is private and the initial permission was Read Write and the new permission provided is ER-- after VirtualProtect is executed with new permission 
+
+        ![image](https://github.com/user-attachments/assets/fb54f275-57ed-4dec-aea6-d06792f9b8e0)
+
+     3. Now the final Memory address 00007FF743B0101E in Memory Map view, to identify where it is 
+
+        ![image](https://github.com/user-attachments/assets/17c104ca-eebf-4c1d-9a07-f73644decda6)  
+
+
+
+
 
 
 
