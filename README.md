@@ -2,23 +2,28 @@
 Which sections of the PE we can put our code into
 
 
-Today Lets try to understand different sections we can place the code or shellcode in the PE file.
+Today Lets try to understand different sections where the malicious payload or we can place the code or shellcode in the PE file.
 
-PE has many sections , but we would be concentrating on 
+PE has many sections , but her we would be concentrating on main three sections. Which are ...  
+
 1. .text
 2. .data
 3. .rsrc
 
 To do that lets create a simple code which helps us to understand more , for this we need visual studio (or gcc compiler being installed and use it to compile and create an exe file to run) and x64dbg
-https://x64dbg.com/ to download the x64dbg debugger and install is simple 
+https://x64dbg.com/ to download the x64dbg debugger and installation is simple 
 
 ![image](https://github.com/user-attachments/assets/f97d1670-b7cb-4668-ad9d-2ac625eadeb4)
 
-It's just a sample diagram which shows the different sections we can see in the PE file.
+It's just a simple diagram which shows the different sections we would be seeing in the PE file.
 
-so we shall first discuss on what methods are used to allocate a space in the process memory , move our payload into it and then how to provide the permissions after that we can also see the x64dbg being used to see the payload placement.
+so we shall first discuss on steps 
+1. what API methods are used to allocate a space in the process memory  
+2. move our payload into the virtually allocated memory  
+3. Then how to provide the permissions after that we can also see the x64dbg being used to see the payload placement.  
 
-1. VirutallAlloc is an API which is defined in Kernel32.dll, which allocates a memory in the process we mention
+
+VirutallAlloc is an API which is defined in Kernel32.dll, which allocates a memory in the process we mention
 
 void * exec_mem;
 
@@ -76,33 +81,33 @@ Sample line of code => th = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) exec_mem
 We can find more detailed information in the link [CreateThread](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 
 
-Now lets start to understand how it can be visualized 
+Now lets start to understand how it works using the debugger x64dbg
 
-The code is attached which you can compile using gcc and create a obj and exe file 
+The code which is attached in the post is which you can compile using gcc and create a obj and exe file , Once the exe file is created follow the steps
 
-Execute the code and open the x64dbg and attach the exe file 
+1. Execute the code and open the x64dbg and attach the exe file as per the screenshot 
 
 ![image](https://github.com/user-attachments/assets/cf89bd7e-67a1-4157-acd0-3bd2aa0f95b8)
 
-Click on the Attach 
+2. Click on the Attach, which attaches the running exe file to the debugger
 
 ![image](https://github.com/user-attachments/assets/5ff7f1db-0865-4a9c-8366-f88c855cf9ee)
 
-Once clicked select the code or exe which we executed 
+3. Once clicked select the code or exe which is being executed or name of our exe file 
 
 ![image](https://github.com/user-attachments/assets/18d1601d-92b0-43b5-9656-9ac74500839a)
 
 
-Now we can see the x64dbg is in Paused state so we need to run the debugger by clicking on . once run it moves to Running 
+4. After the running exe is attached, Now we can see the x64dbg is in Paused state so we need to run the debugger by clicking on run and watch the state moves form Paused to Running. 
 
 ![image](https://github.com/user-attachments/assets/b4d20ec6-883f-4879-afa6-b66156fe7078)
 
 
-Now lets go to the code and press Enter so once we press Enter we go to INT3 code in our code or payload as per the screnshot 
+Now lets go to the terminal where we ran th exe file, which is waiting for our input press Enter key. Once Enter the debugger stops at the INT3 op code which we have in our payload as the screnshot 
 
 ![image](https://github.com/user-attachments/assets/f13ccd89-d671-48ec-837f-3572d9319833)  
 
-In the above image we can see the payload we had in our code is being show , for example i am pasting the payload we have in the code 
+In the above image we can see the payload we had in our code is being shown , The sample payload being used in the code is being pasted here 
 
 unsigned char payload[] = {  
 		0x40,		// INC EAX  
