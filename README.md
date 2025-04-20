@@ -89,6 +89,8 @@ The code which is attached in the post is which you can compile using gcc and cr
 
 ![image](https://github.com/user-attachments/assets/cf89bd7e-67a1-4157-acd0-3bd2aa0f95b8)
 
+Copy the memory address and save it on Notepad or one notes for later use .
+
 2. Click on the Attach, which attaches the running exe file to the debugger
 
 ![image](https://github.com/user-attachments/assets/5ff7f1db-0865-4a9c-8366-f88c855cf9ee)
@@ -103,7 +105,7 @@ The code which is attached in the post is which you can compile using gcc and cr
 ![image](https://github.com/user-attachments/assets/b4d20ec6-883f-4879-afa6-b66156fe7078)
 
 
-Now lets go to the terminal where we ran th exe file, which is waiting for our input press Enter key. Once Enter the debugger stops at the INT3 op code which we have in our payload as the screnshot 
+5. Now lets go to the terminal where we ran the exe file, which is waiting for our input press Enter key. Once Enter the debugger stops at the INT3 op code which we have in our payload as the screnshot 
 
 ![image](https://github.com/user-attachments/assets/f13ccd89-d671-48ec-837f-3572d9319833)  
 
@@ -117,7 +119,28 @@ unsigned char payload[] = {
 	};  
 
  
-Now our main objective is to find where the payload is stored, as per our code 
+Now our main objective is to find where the payload is stored and which sections we can see them.
+
+Steps 
+
+1. Got to Memory Map Tab and right click on empty space and select Find Patterns
+
+   ![image](https://github.com/user-attachments/assets/6d702e73-f3a4-4e96-b68e-ce51e8315f3e)
+
+2. Type the payload in the below format and click on Entire block, which is equal to find whole word ...
+
+   ![image](https://github.com/user-attachments/assets/d0357891-3d18-4aa6-9ec9-cdac94509c92)
+
+3. We will get the address where the pattern or payload is saved
+
+    ![image](https://github.com/user-attachments/assets/e3e2c048-72d8-4ad4-9792-05635935dea0)
+
+4. 
+
+
+
+
+
 
 
 
